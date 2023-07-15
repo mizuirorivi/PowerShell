@@ -16,6 +16,7 @@ set-alias -name pwd -value "$ScriptDirectory/list-workdir.ps1"	# pwd = print wor
 set-alias -name ll -value get-childitem		# ll = list folder (long format)
 del alias:ls -force -errorAction SilentlyContinue 
 set-alias -name ls -value "$ScriptDirectory/list-folder.ps1"	# ls = list folder (short format)
+set-alias -name touch -value "$ScriptDirectory/make_file_dir.ps1"	# touch = create file
 # SET PATH
 $upath =  [System.Environment]::GetEnvironmentVariable("Path","User")
 $syspath =  [System.Environment]::GetEnvironmentVariable("Path","Machine")
@@ -24,8 +25,8 @@ foreach($item in  $item_for_path){
   $upath += ";" + $item
   $syspath += ";" + $item
 }
-[System.Environment]::SetEnvironmentVariable("Path", $upath, "Machine")
-[System.Environment]::SetEnvironmentVariable("Path", $syspath + ";" + $newPath, "User")
+[System.Environment]::SetEnvironmentVariable("Path", $upath, "User")
+[System.Environment]::SetEnvironmentVariable("Path", $syspath, "Machine")
 $env:Path = $upath
 $env:SysPath = $syspath
 # ALIAS APPS
