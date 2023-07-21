@@ -28,7 +28,12 @@ $item_for_path = "$ScriptDirectory",
 "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",
 "C:\Users\rivi\Tools"
 
+
 foreach($item in  $item_for_path){
+  # check if item is already in path
+  if(($upath -match [regex]::Escape($item)) -or ($syspath -match [regex]::Escape($item))) { 
+    continue 
+  }
   $upath += ";" + $item
   $syspath += ";" + $item
 }
