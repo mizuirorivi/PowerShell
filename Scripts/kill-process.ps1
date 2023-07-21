@@ -23,20 +23,23 @@ try {
     }
     
 	$process = & " C:\Users\rivi\Tools\SysinternalsSuite\handle.exe" $Folder 
+    if($process -match "No matching handles found"){
+        throw "No matching handles found"
+    }
     $np = $process -replace  "pid", "`r`npid"
-
-    $pid = $process | ? { $_ -match 'pid: (\d+)' } | % { $matches[1] }
-    Write-Host $np
-    verbose to kill process by input with "y"
+    Write-Host "process: `rn $np"
+    $processId = $process | ? { $_ -match 'pid: (\d+)' } | % { $matches[1] }
+    
+    #verbose to kill process by input with "y"
     $killFlag = Read-Host "kill process? (y/n)"
     if($killFlag -eq "y") {
-        $pid | % { Stop-Process -Id $_ -Force }
-        "✔️ killed process $process"
+        Write-Host $processId | % { Stop-Process -Id $_ -Force }
+        "[+] killed process $process"
     } else {
-        "⚠️ no process killed"
+        "[-] no process killed"
     }
     exit 0 
 } catch {
-	"⚠️ Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
+	"[!] Error in line $($_.InvocationInfo.ScriptLineNumber): $($Error[0])"
 	exit 1
 }

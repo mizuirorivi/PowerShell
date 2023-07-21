@@ -26,7 +26,8 @@ $syspath =  [System.Environment]::GetEnvironmentVariable("Path","Machine")
 $item_for_path = "$ScriptDirectory",
 "C:\Users\rivi\Tools\SysinternalsSuite",
 "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin",
-"C:\Users\rivi\Tools"
+"C:\Users\rivi\Tools",
+"C:\Users\rivi\Tools\WDExtract\Bin\bin64"
 
 
 foreach($item in  $item_for_path){
