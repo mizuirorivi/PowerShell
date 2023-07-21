@@ -33,7 +33,6 @@ try {
 			$foundLine = $false
 		}
 		if($_ -match "# SET SCRIPT DIRECTORY "){
-			Write-Output "found line"
 			$foundLine = $true
 		}
 		Add-Content -Path $tempFile -Value $_

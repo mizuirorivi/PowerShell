@@ -9,17 +9,29 @@
 	Specifies the replacement
 .PARAMETER files
 	Specifies the file to scan
+.PARAMETER recursive
+	flag to search recursively
 .EXAMPLE
-	PS> ./replace-in-files NSA "No Such Agency" C:\Temp\*.txt
+	PS> ./replace-in-files NSA "No Such Agency" C:\Temp\*.txt -recursive
 .LINK
 	https://github.com/fleschutz/PowerShell
 .NOTES
 	Author: Markus Fleschutz | License: CC0
 #>
 
-param([string]$pattern = "", [string]$replacement = "", [string]$files = "")
+param(
+    [string]$pattern = "", 
+    [string]$replacement = "", 
+    [string]$files = "", 
+    [switch]$recursive = $false
+)
 
-function ReplaceInFile { param([string]$FilePath, [string]$Pattern, [string]$Replacement)
+function ReplaceInFile { 
+    param(
+        [string]$FilePath, 
+        [string]$Pattern, 
+        [string]$Replacement
+    )
 
     [System.IO.File]::WriteAllText($FilePath,
         ([System.IO.File]::ReadAllText($FilePath) -replace $Pattern, $Replacement)
@@ -33,7 +45,12 @@ try {
 
 	$StopWatch = [system.diagnostics.stopwatch]::startNew()
 
-	$fileList = (get-childItem -path "$files" -attributes !Directory)
+    if ($recursive) {
+	    $fileList = (get-childItem -path "$files" -file -recurse)
+    }
+    else {
+        $fileList = (get-childItem -path "$files" -file)
+    }
 	foreach($file in $fileList) {
 		ReplaceInFile $file $pattern $replacement
 	}

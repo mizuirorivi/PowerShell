@@ -8,20 +8,26 @@
 	Specifies the path 
 .PARAMETER term
 	Specifies the search term
+.PARAMETER replaceStr
 .EXAMPLE
 	PS> ./search-filename
 .LINK
-	https://github.com/fleschutz/PowerShell
+	https://github.com/mizuirorivi/PowerShell
 .NOTES
-	Author: Markus Fleschutz | License: CC0
+	Author: mizuirorivi | License: CC0
 #>
 
 param(
 [Parameter(Mandatory=$true)]
 $path,
 [Parameter(Mandatory=$true)]
-$term
+$term,
+$replaceStr = ""
 )
+$rf = read-host 'replace? (y/n)'
+if($rf -eq 'y'){
+    $replaceStr = read-host "replaceStr:"
+}
 # Recursive search function
 Write-Host "Results:"
 function Search-Folder($FilePath, $SearchTerm) {
@@ -31,7 +37,13 @@ function Search-Folder($FilePath, $SearchTerm) {
     foreach ($child in $children) {
         $name = $child.Name
         if ($name -match $SearchTerm) {
-            Write-Host "$FilePath\$name"
+            if($replaceStr -ne ""){
+                $newName = $name -replace $SearchTerm, $replaceStr
+                Rename-Item -Path "$FilePath\$name" -NewName "$FilePath\$newName"
+                Write-Host "$FilePath\$newName"
+            }else{
+                Write-Host "$FilePath\$name"
+            }
         }
         $isdir = Test-Path -Path "$FilePath\$name" -PathType Container
         if ($isdir) {
@@ -40,5 +52,6 @@ function Search-Folder($FilePath, $SearchTerm) {
     }
 }
 # Call the search function
-Search-Folder -FilePath $path -SearchTerm $term
+
+Search-Folder -FilePath $path -SearchTerm $term -replaceStr $replaceStr
 exit 0 # success

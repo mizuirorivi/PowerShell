@@ -22,7 +22,8 @@ param(
 )
 try {
     if ($Name -eq "") { $Name = read-host "Enter name for directory or file" }
-    if ($file) {
+
+    if (!$flag) {
         New-Item -Name $Name -ItemType "file"
     }
     else {
